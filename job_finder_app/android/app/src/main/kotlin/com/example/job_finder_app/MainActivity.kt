@@ -1,4 +1,4 @@
-package com.example.book_store_app
+package com.example.job_finder_app
 
 import io.flutter.embedding.android.FlutterActivity
 
