@@ -1,4 +1,4 @@
-# book_store_app
+# job_finder_app
 
 A new Flutter project.
 
