@@ -12,7 +12,9 @@ class JobItem extends StatelessWidget {
       width: 270,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30), color: Colors.white),
+          border: Border.all(color: Theme.of(context).secondaryHeaderColor),
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.white),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
