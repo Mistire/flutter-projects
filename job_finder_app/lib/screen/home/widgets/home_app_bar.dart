@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../profile/profile_page.dart';
 
 class HomeAppBar extends StatelessWidget {
   @override
@@ -12,22 +13,26 @@ class HomeAppBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              'Welcome home',
-              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              'Mistire Daniel',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome home',
+                style:
+                    TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
               ),
-            )
-          ]),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Mistire Daniel',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
           Row(
             children: [
               Container(
@@ -47,19 +52,31 @@ class HomeAppBar extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: Colors.red, shape: BoxShape.circle),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
               SizedBox(
                 width: 20,
               ),
-              ClipOval(
-                child: Image.asset(
-                  'assets/images/avatar.png',
-                  width: 40,
+              GestureDetector(
+                onTap: () {
+                  // Navigate to the profile page when the image is clicked
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ProfilePage(), // Navigate to ProfilePage
+                    ),
+                  );
+                },
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/images/profile.jpg', // Path to your profile image
+                    width: 40,
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ],

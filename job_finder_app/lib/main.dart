@@ -4,6 +4,7 @@ import 'screen/auth/login_page.dart';
 import 'screen/auth/register_page.dart';
 import 'screen/home/home.dart';
 import 'screen/onboarding/onboarding_page.dart';
+import 'screen/profile/profile_page.dart';
 import 'screen/splash/splash_page.dart';
 
 void main() {
@@ -26,9 +27,10 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSwatch()
                 .copyWith(secondary: Color(0xFFFED408))),
         // home: HomePage());
-        home: RegisterPage());
-    // home: LoginPage());
-    // home: SplashPage());
-    // home: OnboardingPage());
+        // home: RegisterPage());
+        // home: LoginPage());
+        // home: SplashPage());
+        // home: OnboardingPage());
+        home: ProfilePage());
   }
 }

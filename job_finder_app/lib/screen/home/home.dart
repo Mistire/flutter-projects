@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
             BottomNavigationBarItem(
               label: 'Home',
               icon: Icon(
-                Icons.home,
+                Icons.person_2_outlined,
                 size: 20,
               ),
             ),
