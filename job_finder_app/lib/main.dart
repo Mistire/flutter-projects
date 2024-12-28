@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:job_finder_app/screen/profile/edit_profile/edit_profile.dart';
 import 'screen/auth/login_page.dart';
 import 'screen/auth/register_page.dart';
 import 'screen/home/home.dart';
@@ -18,19 +19,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Job Finder app',
         theme: ThemeData(
-            primaryColor: Color(0xFF438187),
+            primaryColor: const Color(0xFF438187),
             colorScheme: ColorScheme.fromSwatch()
-                .copyWith(secondary: Color(0xFFFED408))),
+                .copyWith(secondary: const Color(0xFFFED408))),
         // home: HomePage());
         // home: RegisterPage());
         // home: LoginPage());
         // home: SplashPage());
         // home: OnboardingPage());
         home: ProfilePage());
+    // home: EditProfilePage());
   }
 }

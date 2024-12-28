@@ -5,12 +5,12 @@ import 'package:job_finder_app/widgets/icon_text.dart';
 class JobItem extends StatelessWidget {
   final Job job;
   final bool showTime;
-  JobItem(this.job, {this.showTime = false});
+  const JobItem(this.job, {super.key, this.showTime = false});
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 270,
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
           border: Border.all(color: Theme.of(context).secondaryHeaderColor),
           borderRadius: BorderRadius.circular(30),
@@ -24,16 +24,16 @@ class JobItem extends StatelessWidget {
                 Container(
                   width: 40,
                   height: 40,
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.grey.withOpacity(0.1),
                   ),
                   child: Image.asset(job.logoUrl),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(job.company,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.grey)),
@@ -45,14 +45,14 @@ class JobItem extends StatelessWidget {
             )
           ],
         ),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
         Text(
           job.title,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
         Row(

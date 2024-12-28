@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:job_finder_app/screen/onboarding/onboarding_page.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({Key? key}) : super(key: key);
+  const SplashPage({super.key});
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -24,12 +24,12 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF438187);
 
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: primaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text(
               "Workify",
               style: TextStyle(

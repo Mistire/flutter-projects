@@ -8,7 +8,7 @@ class RegisterPage extends StatelessWidget {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
-  RegisterPage({Key? key}) : super(key: key);
+  RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {

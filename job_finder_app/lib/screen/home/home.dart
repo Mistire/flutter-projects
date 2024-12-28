@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         elevation: 0,
         onPressed: () {},
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
           showUnselectedLabels: false,
           selectedItemColor: Theme.of(context).primaryColor,
           type: BottomNavigationBarType.fixed,
-          items: [
+          items: const [
             BottomNavigationBarItem(
               label: 'Home',
               icon: Icon(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../profile/profile_page.dart';
 
 class HomeAppBar extends StatelessWidget {
+  const HomeAppBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,7 +15,7 @@ class HomeAppBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -36,10 +38,10 @@ class HomeAppBar extends StatelessWidget {
           Row(
             children: [
               Container(
-                margin: EdgeInsets.only(right: 10),
+                margin: const EdgeInsets.only(right: 10),
                 child: Stack(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.notifications_none_outlined,
                       size: 30,
                       color: Colors.grey,
@@ -48,15 +50,15 @@ class HomeAppBar extends StatelessWidget {
                       top: 0,
                       right: 0,
                       child: Container(
-                        padding: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
                             color: Colors.red, shape: BoxShape.circle),
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               GestureDetector(

@@ -6,6 +6,8 @@ import 'package:job_finder_app/screen/search/widgets/search_option.dart';
 import 'widgets/search_app_bar.dart';
 
 class SearchPage extends StatelessWidget {
+  const SearchPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +27,7 @@ class SearchPage extends StatelessWidget {
               ),
             ],
           ),
-          Container(
+          SizedBox(
             height: 1000,
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

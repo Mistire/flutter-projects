@@ -6,7 +6,7 @@ class LoginPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  LoginPage({Key? key}) : super(key: key);
+  LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              Center(
+              const Center(
                 child: Text(
                   'or login with',
                   style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -104,7 +104,7 @@ class LoginPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     minimumSize:
-                        Size(double.infinity, 50), // specify height here
+                        const Size(double.infinity, 50), // specify height here
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -112,7 +112,7 @@ class LoginPage extends StatelessWidget {
                   onPressed: () {
                     // Handle login logic
                   },
-                  child: Text(
+                  child: const Text(
                     'Login',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
@@ -127,7 +127,7 @@ class LoginPage extends StatelessWidget {
                     onTap: () {
                       Navigator.pushNamed(context, '/register');
                     },
-                    child: Text(
+                    child: const Text(
                       'Register Now',
                       style: TextStyle(color: primaryColor),
                     ),
