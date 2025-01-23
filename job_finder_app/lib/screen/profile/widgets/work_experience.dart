@@ -19,7 +19,7 @@ class WorkExperience extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          JobList(),
+          JobList(onlyBookmarked: true), // Display only saved jobs
         ],
       ),
     );

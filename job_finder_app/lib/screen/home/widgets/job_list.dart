@@ -1,18 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:job_finder_app/models/job.dart';
-import 'package:job_finder_app/screen/home/widgets/job_item.dart';
 
+import '../../../models/job.dart';
 import 'job_detail.dart';
+import 'job_item.dart';
 
 class JobList extends StatelessWidget {
-  JobList({super.key});
+  final bool onlyBookmarked; // Parameter to filter jobs
+
+  JobList({super.key, this.onlyBookmarked = false}); // Default shows all jobs
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Fetching job data from Firestore
+  // Fetching job data from Firestore with optional filtering
   Stream<List<Job>> _getJobs() {
-    return _firestore.collection('jobs').snapshots().map((snapshot) {
+    Query query = _firestore.collection('jobs');
+
+    if (onlyBookmarked) {
+      query = query.where('isMark', isEqualTo: true); // Filter bookmarked jobs
+    }
+
+    return query.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         return Job(
           id: doc.id,
@@ -42,7 +50,11 @@ class JobList extends StatelessWidget {
         }
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No jobs available'));
+          return Center(
+            child: Text(
+              onlyBookmarked ? 'No saved jobs available' : 'No jobs available',
+            ),
+          );
         }
 
         final jobList = snapshot.data!;
