@@ -18,61 +18,71 @@ class RegisterPage extends StatelessWidget {
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
 
-    if (email.isEmpty || !email.contains('@')) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid email address.')),
-      );
+    if (!_isEmailValid(email)) {
+      _showSnackBar(context, 'Please enter a valid email address.');
       return;
     }
 
-    if (password.length < 8) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Password must be at least 8 characters long.')),
-      );
+    if (!_isPasswordValid(password)) {
+      _showSnackBar(context,
+          'Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a digit, and a special character.');
       return;
     }
 
     if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match.')),
-      );
+      _showSnackBar(context, 'Passwords do not match.');
       return;
     }
 
     try {
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration successful!')),
-      );
 
-      // Navigate to the home screen or another page
-      Navigator.push(
+      _showSnackBar(context, 'Registration successful!');
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } on FirebaseAuthException catch (e) {
-      String message;
-      if (e.code == 'weak-password') {
-        message = 'The password provided is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        message = 'An account already exists for this email.';
-      } else if (e.code == 'invalid-email') {
-        message = 'The email address is invalid.';
-      } else {
-        message = 'Registration failed: ${e.message}';
-      }
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)));
+      _handleFirebaseAuthError(context, e);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An unexpected error occurred: $e')),
-      );
+      _showSnackBar(context, 'An unexpected error occurred: $e');
     }
+  }
+
+  bool _isEmailValid(String email) {
+    return email.isNotEmpty && email.contains('@');
+  }
+
+  bool _isPasswordValid(String password) {
+    final RegExp passwordRegExp =
+        RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$');
+    return passwordRegExp.hasMatch(password);
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _handleFirebaseAuthError(BuildContext context, FirebaseAuthException e) {
+    String message;
+    switch (e.code) {
+      case 'weak-password':
+        message = 'The password provided is too weak.';
+        break;
+      case 'email-already-in-use':
+        message = 'An account already exists for this email.';
+        break;
+      case 'invalid-email':
+        message = 'The email address is invalid.';
+        break;
+      default:
+        message = 'Registration failed: ${e.message}';
+    }
+    _showSnackBar(context, message);
   }
 
   @override

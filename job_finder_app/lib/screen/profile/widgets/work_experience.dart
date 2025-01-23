@@ -12,7 +12,7 @@ class WorkExperience extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Work Experience",
+            "Saved Jobs",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
