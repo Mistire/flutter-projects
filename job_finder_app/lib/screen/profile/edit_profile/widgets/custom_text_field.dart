@@ -4,12 +4,14 @@ class CustomTextField extends StatelessWidget {
   final String label;
   final String initialValue;
   final ValueChanged<String?> onChanged;
+  final bool readOnly;
 
   const CustomTextField({
     Key? key,
     required this.label,
     required this.initialValue,
     required this.onChanged,
+    this.readOnly = false,
   }) : super(key: key);
 
   @override
@@ -37,6 +39,7 @@ class CustomTextField extends StatelessWidget {
           return null;
         },
         onChanged: onChanged,
+        readOnly: readOnly, // Make it read-only to avoid manual input
       ),
     );
   }

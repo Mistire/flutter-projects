@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "431989975790",
+    "project_id": "job-finder-app-facaf",
+    "storage_bucket": "job-finder-app-facaf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431989975790:android:aac585fdff123bd95e61ff",
+        "android_client_info": {
+          "package_name": "com.example.job_finder_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPfwx5l4iKM0nvGV-H7xBqcrkfoQs-ET0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

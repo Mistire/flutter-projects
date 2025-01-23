@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:job_finder_app/screen/profile/edit_profile/edit_profile.dart';
@@ -8,7 +9,15 @@ import 'screen/onboarding/onboarding_page.dart';
 import 'screen/profile/profile_page.dart';
 import 'screen/splash/splash_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await Firebase.initializeApp();
+    print('Firebase initialized successfully!');
+  } catch (e) {
+    print('Failed to initialize Firebase: $e');
+  }
   runApp(const MyApp());
 }
 
@@ -28,11 +37,11 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSwatch()
                 .copyWith(secondary: const Color(0xFFFED408))),
         // home: HomePage());
-        // home: RegisterPage());
-        // home: LoginPage());
-        // home: SplashPage());
-        // home: OnboardingPage());
-        home: ProfilePage());
+        home: RegisterPage());
+    // home: LoginPage());
+    // home: SplashPage());
+    // home: OnboardingPage());
+    // home: ProfilePage());
     // home: EditProfilePage());
   }
 }

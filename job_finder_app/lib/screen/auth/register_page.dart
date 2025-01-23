@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'login_page.dart';
 import 'widgets/custom_form_field.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -9,6 +12,68 @@ class RegisterPage extends StatelessWidget {
       TextEditingController();
 
   RegisterPage({super.key});
+
+  Future<void> registerUser(BuildContext context) async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+    final confirmPassword = confirmPasswordController.text.trim();
+
+    if (email.isEmpty || !email.contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid email address.')),
+      );
+      return;
+    }
+
+    if (password.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Password must be at least 8 characters long.')),
+      );
+      return;
+    }
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match.')),
+      );
+      return;
+    }
+
+    try {
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration successful!')),
+      );
+
+      // Navigate to the home screen or another page
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      String message;
+      if (e.code == 'weak-password') {
+        message = 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        message = 'An account already exists for this email.';
+      } else if (e.code == 'invalid-email') {
+        message = 'The email address is invalid.';
+      } else {
+        message = 'Registration failed: ${e.message}';
+      }
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An unexpected error occurred: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +93,7 @@ class RegisterPage extends StatelessWidget {
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
                   color: primaryColor,
-                  fontFamily: 'Roboto', // Ensure this font is included
+                  fontFamily: 'Roboto',
                 ),
               ),
               const SizedBox(height: 30),
@@ -74,12 +139,11 @@ class RegisterPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
-                  onPressed: () {
-                    // Handle registration logic
-                  },
+                  onPressed: () => registerUser(context),
                   child: const Text(
                     'Register',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 1), fontSize: 16),
                   ),
                 ),
               ),
@@ -90,7 +154,10 @@ class RegisterPage extends StatelessWidget {
                   const Text("Already a member? "),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/login');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
                     },
                     child: const Text(
                       'Login',

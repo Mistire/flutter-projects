@@ -1,4 +1,11 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'widgets/custom_text_field.dart';
 import 'widgets/date_picker_field.dart';
@@ -13,13 +20,89 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
-  String name = "Mistire Daniel";
-  String email = "mistiredan@gmail.com";
-  String mobileNumber = "+251123456789";
-  String dateOfBirth = "2002-04-29";
-  String jobTitle = "Software Developer";
-  String address = "123 Main Street";
+  String name = "";
+  String email = "";
+  String mobileNumber = "";
+  String dateOfBirth = "";
+  String jobTitle = "";
+  String address = "";
   String? profileImagePath;
+  late User _user;
+
+  final _auth = FirebaseAuth.instance;
+  final _firestore = FirebaseFirestore.instance;
+  final _storage = FirebaseStorage.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _user = _auth.currentUser!;
+
+    // Fetch the user's current profile data from Firestore
+    _fetchUserProfile();
+  }
+
+  // Fetch user profile from Firestore
+  Future<void> _fetchUserProfile() async {
+    try {
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(_user.uid).get();
+      if (userDoc.exists) {
+        setState(() {
+          name = userDoc['name'] ?? _user.displayName ?? 'No name provided';
+          email = _user.email ?? 'No email provided';
+          mobileNumber = userDoc['mobileNumber'] ?? '';
+          dateOfBirth = userDoc['dateOfBirth'] ?? '';
+          jobTitle = userDoc['jobTitle'] ?? '';
+          address = userDoc['address'] ?? '';
+          profileImagePath = userDoc['profileImagePath'];
+        });
+      }
+    } catch (e) {
+      print("Error fetching user profile: $e");
+    }
+  }
+
+  // Function to update user profile
+  Future<void> _updateProfile() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        // If a new image is picked, upload it to Firebase Storage
+        String? imageUrl;
+        if (profileImagePath != null) {
+          File imageFile = File(profileImagePath!);
+          UploadTask uploadTask = _storage
+              .ref('profile_pictures/${_user.uid}.jpg')
+              .putFile(imageFile);
+          TaskSnapshot snapshot = await uploadTask;
+          imageUrl = await snapshot.ref.getDownloadURL();
+        }
+
+        // Update the user's profile in Firestore
+        await _firestore.collection('users').doc(_user.uid).set({
+          'name': name,
+          'email': email,
+          'mobileNumber': mobileNumber,
+          'dateOfBirth': dateOfBirth,
+          'jobTitle': jobTitle,
+          'address': address,
+          'profileImagePath': imageUrl ?? profileImagePath,
+        }, SetOptions(merge: true));
+
+        // Optionally update the Firebase Authentication display name
+        await _user.updateDisplayName(name);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile Updated')),
+        );
+      } catch (e) {
+        print("Error updating profile: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update profile')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +160,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         email = value!;
                       });
                     },
+                    readOnly: true, // Email should be read-only
                   ),
                   CustomTextField(
                     label: "Mobile Number",
@@ -120,13 +204,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             const SizedBox(height: 20),
             // Update Button
             ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Profile Updated')),
-                  );
-                }
-              },
+              onPressed: _updateProfile,
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
                 padding:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:job_finder_app/screen/profile/edit_profile/edit_profile.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -8,6 +9,52 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the current user from Firebase Auth
+    final user = FirebaseAuth.instance.currentUser;
+
+    // If the user is not logged in, return a default placeholder
+    if (user == null) {
+      return Container(
+        decoration: BoxDecoration(
+          color: primaryColor,
+          borderRadius: const BorderRadius.only(
+            bottomRight: Radius.circular(20),
+            bottomLeft: Radius.circular(20),
+          ),
+        ),
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: const [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage('assets/images/profile.jpg'),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "User not logged in",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Please log in to see your profile.",
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Extract the name from the email by splitting the email at '@' symbol
+    String displayName =
+        user.displayName ?? user.email?.split('@')[0] ?? 'No name provided';
+
     return Container(
       decoration: BoxDecoration(
         color: primaryColor,
@@ -50,17 +97,17 @@ class ProfileHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          const Text(
-            "Mistire Daniel",
-            style: TextStyle(
+          Text(
+            displayName,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const Text(
-            "mistiredan@gmail.com",
-            style: TextStyle(
+          Text(
+            user.email ?? 'No email provided',
+            style: const TextStyle(
               color: Colors.white70,
               fontSize: 14,
             ),
