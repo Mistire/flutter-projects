@@ -1,10 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:job_finder_app/models/job.dart';
-import 'package:job_finder_app/screen/home/widgets/job_item.dart';
+import 'package:flutter/material.dart';
+
+import '../../../models/job.dart';
+import '../../home/widgets/job_item.dart';
 
 class SearchList extends StatefulWidget {
-  const SearchList({super.key});
+  final String query; // Search input query
+  final List<String> filters; // Active filters
+
+  const SearchList({super.key, required this.query, required this.filters});
 
   @override
   _SearchListState createState() => _SearchListState();
@@ -13,19 +17,31 @@ class SearchList extends StatefulWidget {
 class _SearchListState extends State<SearchList> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Fetch jobs from Firestore
   Future<List<Job>> _fetchJobs() async {
-    final jobCollection = _firestore.collection('jobs');
+    Query<Map<String, dynamic>> jobCollection = _firestore.collection('jobs');
+
+    // Apply filters dynamically based on job titles
+    if (widget.filters.isNotEmpty) {
+      jobCollection = jobCollection.where(
+        'title',
+        whereIn: widget.filters,
+      );
+    }
+
     final querySnapshot = await jobCollection.get();
-    return querySnapshot.docs.map((doc) {
-      return Job.fromFirestore(doc);
-    }).toList();
+
+    // Filter by search query (starts with logic)
+    return querySnapshot.docs
+        .map((doc) => Job.fromFirestore(doc))
+        .where((job) =>
+            job.title.toLowerCase().startsWith(widget.query.toLowerCase()))
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Job>>(
-      future: _fetchJobs(), // Fetch jobs when the widget is built
+      future: _fetchJobs(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -45,9 +61,7 @@ class _SearchListState extends State<SearchList> {
                 jobList[index],
                 showTime: true,
               ),
-              separatorBuilder: (_, index) => const SizedBox(
-                height: 20,
-              ),
+              separatorBuilder: (_, index) => const SizedBox(height: 20),
               itemCount: jobList.length,
             ),
           );

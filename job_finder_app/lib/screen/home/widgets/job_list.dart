@@ -6,18 +6,30 @@ import 'job_detail.dart';
 import 'job_item.dart';
 
 class JobList extends StatelessWidget {
-  final bool onlyBookmarked; // Parameter to filter jobs
+  final bool onlyBookmarked; // Parameter to filter bookmarked jobs
+  final String
+      selectedTag; // New parameter to filter by tag (All, Popular, Featured)
 
-  JobList({super.key, this.onlyBookmarked = false}); // Default shows all jobs
+  JobList({super.key, this.onlyBookmarked = false, this.selectedTag = 'All'});
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Fetching job data from Firestore with optional filtering
+  // Fetching job data from Firestore with optional filtering by tag
   Stream<List<Job>> _getJobs() {
     Query query = _firestore.collection('jobs');
 
+    // Filter by 'isMark' if onlyBookmarked is true
     if (onlyBookmarked) {
-      query = query.where('isMark', isEqualTo: true); // Filter bookmarked jobs
+      query = query.where('isMark', isEqualTo: true);
+    }
+
+    // Apply tag-based filtering
+    if (selectedTag == '⚡ Popular') {
+      // Show jobs from Amazon and Google for 'Popular' tag
+      query = query.where('company', whereIn: ['amazon', 'google']);
+    } else if (selectedTag == '⭐ Featured') {
+      // Show only bookmarked jobs for 'Featured' tag
+      query = query.where('isMark', isEqualTo: true);
     }
 
     return query.snapshots().map((snapshot) {
@@ -52,7 +64,9 @@ class JobList extends StatelessWidget {
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(
             child: Text(
-              onlyBookmarked ? 'No saved jobs available' : 'No jobs available',
+              onlyBookmarked
+                  ? 'No saved jobs available'
+                  : 'No jobs available for "$selectedTag" tag',
             ),
           );
         }
